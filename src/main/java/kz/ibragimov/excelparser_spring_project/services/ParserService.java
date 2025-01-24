@@ -40,7 +40,7 @@ public class ParserService {
                 record.setFirstName(row.getCell(2).getStringCellValue());
                 record.setMiddleName(row.getCell(3).getStringCellValue());
                 record.setLastName(row.getCell(4).getStringCellValue());
-                record.setDateOfBirth(row.getCell(5).getLocalDateTimeCellValue().toLocalDate());
+                record.setDateOfBirth(row.getCell(5).getStringCellValue());
                 records.add(record);
             }
             dataRepository.saveAll(records);

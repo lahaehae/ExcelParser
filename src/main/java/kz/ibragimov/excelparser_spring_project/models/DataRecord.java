@@ -8,7 +8,7 @@ public class DataRecord {
     private String firstName;
     private String middleName;
     private String lastName;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     public Long getTransportCard() {
         return transportCard;
@@ -42,11 +42,11 @@ public class DataRecord {
         this.middleName = middleName;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
