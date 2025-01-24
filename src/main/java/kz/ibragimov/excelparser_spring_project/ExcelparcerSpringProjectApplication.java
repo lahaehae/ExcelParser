@@ -1,4 +1,4 @@
-package kz.ibgragimov.excelparcer_spring_project;
+package kz.ibragimov.excelparser_spring_project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
