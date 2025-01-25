@@ -1,5 +1,6 @@
 package kz.ibragimov.excelparser_spring_project.controllers;
 
+import kz.ibragimov.excelparser_spring_project.exceptions.CellValidationException;
 import kz.ibragimov.excelparser_spring_project.services.ParserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ValidationException;
+import java.io.IOException;
 
 
 @RestController
@@ -35,6 +37,10 @@ public class ParserController {
         return ResponseEntity.ok("Все гуд");
         } catch(ValidationException ex){
             return ResponseEntity.badRequest().body("Ошибка валидации: " + ex.getMessage());
+        } catch(CellValidationException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ошибка в строке: " + ex.getMessage());
+        } catch (IOException ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка обработки файла: " + ex.getMessage());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Внутренняя ошибка сервера: " + ex.getMessage());
         }

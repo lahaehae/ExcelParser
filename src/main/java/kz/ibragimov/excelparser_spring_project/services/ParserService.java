@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.bind.ValidationException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +25,7 @@ public class ParserService {
         this.dataRepository = dataRepository;
     }
 
-    public void parseFile(MultipartFile file) throws ValidationException {
+    public void parseFile(MultipartFile file) throws IOException, CellValidationException {
         try(InputStream inputStream = file.getInputStream();
             Workbook workbook = WorkbookFactory.create(inputStream)){
 
@@ -48,21 +49,21 @@ public class ParserService {
                     record.setMiddleName(getStringValue(row.getCell(4), rowIndex));
                     record.setDateOfBirth(getDateValue(row.getCell(5), rowIndex));
                     records.add(record);
-                } catch (Exception ex){
-                    System.err.println("Ошибка в строке " + rowIndex + ": " + ex.getMessage());
+                } catch (CellValidationException ex){
+                    throw new CellValidationException(ex.getMessage(), rowIndex);
                 }
                 rowIndex++;
             }
             dataRepository.saveAll(records);
-        } catch (Exception e){
-            throw new RuntimeException("Ошибка обработки файла: " + e.getMessage());
+        } catch (IOException e){
+            System.err.println("Ошибка обработки файла: " + e.getMessage());
+            throw e;
         }
     }
     private LocalDate getDateValue(Cell cell, int rowIndex) {
         if (cell == null) {
             throw new IllegalArgumentException("Поле не может быть пустым");
         }
-
         try {
             if (cell.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
                 return cell.getLocalDateTimeCellValue().toLocalDate();
@@ -79,22 +80,22 @@ public class ParserService {
 
     private Long getLongValue(Cell cell, int rowIndex) {
         if (cell == null) {
-            throw new IllegalArgumentException("Поле не может быть пустым");
+            throw new CellValidationException("Поле не может быть пустым" + rowIndex, rowIndex);
         }
             if (cell.getCellType() == CellType.NUMERIC) {
                 return (long) cell.getNumericCellValue();
             }
-            throw new IllegalArgumentException("Не числовое значение в ячейке в строке " + rowIndex);
+            throw new CellValidationException("Не числовое значение в ячейке в строке " + rowIndex, rowIndex);
         }
 
     private String getStringValue(Cell cell, int rowIndex) {
         if (cell == null) {
-            throw new IllegalArgumentException("Поле не может быть пустым");
+            throw new CellValidationException("Поле не может быть пустым " + rowIndex, rowIndex);
         }
             if (cell.getCellType() == CellType.STRING) {
                 return cell.getStringCellValue();
             }
-            throw new IllegalArgumentException("Не строковое значение в ячейке в строке " + rowIndex);
+            throw new CellValidationException("Не строковое значение в ячейке в строке " + rowIndex , rowIndex);
         }
-    }
+}
 

@@ -18,7 +18,7 @@ public class DataRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
+    @Transactional
     public void saveAll(List<DataRecord> records) {
         String sql = "INSERT INTO data_records (transportcard, iin, first_name, middle_name, last_name, date_of_birth)"
                 + "VALUES (?, ?, ?, ?, ?, ?)";
