@@ -4,6 +4,7 @@ import kz.ibragimov.excelparser_spring_project.exceptions.CellValidationExceptio
 import kz.ibragimov.excelparser_spring_project.models.DataRecord;
 import kz.ibragimov.excelparser_spring_project.repositories.DataRepository;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,9 +21,11 @@ import java.util.List;
 @Service
 public class ParserService {
     private final DataRepository dataRepository;
-
-    public ParserService(DataRepository dataRepository){
+    private final ValidationService validationService;
+    @Autowired
+    public ParserService(DataRepository dataRepository, ValidationService validationService){
         this.dataRepository = dataRepository;
+        this.validationService = validationService;
     }
 
     public void parseFile(MultipartFile file) throws IOException, CellValidationException {
@@ -49,6 +52,7 @@ public class ParserService {
                     record.setMiddleName(getStringValue(row.getCell(4), rowIndex));
                     record.setDateOfBirth(getDateValue(row.getCell(5), rowIndex));
                     records.add(record);
+                    validationService.validateDataRecord(record, rowIndex);
                 } catch (CellValidationException ex){
                     throw new CellValidationException(ex.getMessage(), rowIndex);
                 }

@@ -7,19 +7,11 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 public class DataRecord {
-    @Min(value = 0, message = "Некорректный ввод номера Транспортной Карты")
     private Long transportCard;
-    @Min(value = 12, message = "Некорректный ввод ИИН")
-    @NotBlank(message = "Поле ИИН не может быть пустым")
     private Long iin;
-    @NotBlank(message = "Поле Имя не может быть пустым")
     private String firstName;
-    @NotBlank(message = "Поле Отчество не может быть пустым")
     private String middleName;
-    @NotBlank(message = "Поле Фамилия не может быть пустым")
     private String lastName;
-    @NotNull(message = "Поле Дата не может быть пустым")
-    @Past(message = "Дата должно быть в прошлом")
     private LocalDate dateOfBirth;
 
     public Long getTransportCard() {
