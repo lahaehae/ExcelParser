@@ -20,12 +20,15 @@ import java.util.List;
 
 @Service
 public class ParserService {
+    private final IdGenerationService idGenerationService;
     private final DataRepository dataRepository;
     private final ValidationService validationService;
     @Autowired
-    public ParserService(DataRepository dataRepository, ValidationService validationService){
+    public ParserService(DataRepository dataRepository, ValidationService validationService,
+                         IdGenerationService idGenerationService){
         this.dataRepository = dataRepository;
         this.validationService = validationService;
+        this.idGenerationService = idGenerationService;
     }
 
     public void parseFile(MultipartFile file) throws IOException, CellValidationException {
@@ -45,6 +48,7 @@ public class ParserService {
 
                 DataRecord record = new DataRecord();
                 try {
+                    record.setId(idGenerationService.generateId());
                     record.setTransportCard(getLongValue(row.getCell(0), rowIndex));
                     record.setIin(getLongValue(row.getCell(1), rowIndex));
                     record.setLastName(getStringValue(row.getCell(2), rowIndex));

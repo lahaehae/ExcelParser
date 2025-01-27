@@ -1,18 +1,24 @@
 package kz.ibragimov.excelparser_spring_project.models;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
+
 public class DataRecord {
+    private Long id;
     private Long transportCard;
     private Long iin;
     private String firstName;
     private String middleName;
     private String lastName;
     private LocalDate dateOfBirth;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getTransportCard() {
         return transportCard;
